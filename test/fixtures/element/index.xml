@@ -1,0 +1,12 @@
+<root>
+  Elements consist of tags:
+  <element>
+    This is an opening tag
+    <void/>
+    This one is void: the opening tag closes itself.
+  </element>
+  This is a closing tag.
+
+  Nesting is done like so:
+  <a><b><c/></b></a>
+</root>

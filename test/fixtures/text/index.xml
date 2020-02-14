@@ -1,0 +1,10 @@
+<root>
+  This is text.
+  <!--!-->
+  Here we have predefined entities:
+  &lt; for U+003C LESS THAN;
+  &gt; for U+003E GREATER THAN;
+  &amp; for U+0026 AMPERSAND;
+  &apos; for U+0027 APOSTROPHE;
+  &quot; for U+0022 QUOTATION MARK.
+</root>

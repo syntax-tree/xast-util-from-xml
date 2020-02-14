@@ -1,0 +1,130 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "element",
+      "name": "root",
+      "attributes": {},
+      "children": [
+        {
+          "type": "text",
+          "value": "\n  Elements can have attributes:\n  ",
+          "position": {
+            "start": {
+              "line": 1,
+              "column": 7,
+              "offset": 6
+            },
+            "end": {
+              "line": 3,
+              "column": 3,
+              "offset": 41
+            }
+          }
+        },
+        {
+          "type": "element",
+          "name": "element",
+          "attributes": {
+            "attributeName": "attributeValue"
+          },
+          "children": [],
+          "position": {
+            "start": {
+              "line": 3,
+              "column": 3,
+              "offset": 41
+            },
+            "end": {
+              "line": 3,
+              "column": 45,
+              "offset": 83
+            }
+          }
+        },
+        {
+          "type": "text",
+          "value": "\n\n  ",
+          "position": {
+            "start": {
+              "line": 3,
+              "column": 45,
+              "offset": 83
+            },
+            "end": {
+              "line": 5,
+              "column": 3,
+              "offset": 87
+            }
+          }
+        },
+        {
+          "type": "element",
+          "name": "a",
+          "attributes": {
+            "b": "charlie",
+            "d": "echo",
+            "f": "golf"
+          },
+          "children": [],
+          "position": {
+            "start": {
+              "line": 5,
+              "column": 3,
+              "offset": 87
+            },
+            "end": {
+              "line": 9,
+              "column": 5,
+              "offset": 136
+            }
+          }
+        },
+        {
+          "type": "text",
+          "value": "\n",
+          "position": {
+            "start": {
+              "line": 9,
+              "column": 5,
+              "offset": 136
+            },
+            "end": {
+              "line": 10,
+              "column": 1,
+              "offset": 137
+            }
+          }
+        }
+      ],
+      "position": {
+        "start": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        },
+        "end": {
+          "line": 10,
+          "column": 8,
+          "offset": 144
+        }
+      }
+    },
+    {
+      "type": "text",
+      "value": "\n",
+      "position": {
+        "start": {
+          "line": 10,
+          "column": 8,
+          "offset": 144
+        },
+        "end": {
+          "line": 11,
+          "column": 1,
+          "offset": 145
+        }
+      }
+    }
+  ]
+}

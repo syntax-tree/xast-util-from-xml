@@ -1,0 +1,12 @@
+<root>
+  Here we have some character data:
+  <![CDATA[<greeting>Hello, world!</greeting>]]>
+  And some more:
+  <![CDATA[asd]]asd]]>
+  This one has multiple lines:
+  <![CDATA[
+  Look,
+  multiple
+  lines!
+  ]]>
+</root>

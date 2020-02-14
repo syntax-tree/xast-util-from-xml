@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>The SVG `&lt;foreignObject>` element</title>
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+      <foreignObject x="40" y="20" width="200" height="300">
+        <body xmlns="http://www.w3.org/1999/xhtml">
+          <div>Lorem ipsum.</div>
+        </body>
+      </foreignObject>
+    </svg>
+  </body>
+</html>

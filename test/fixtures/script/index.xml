@@ -1,0 +1,7 @@
+<root>
+  <script type="text/javascript">
+    // <![CDATA[
+    alert(1)
+    // ]]>
+  </script>
+</root>

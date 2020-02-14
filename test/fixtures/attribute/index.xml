@@ -1,0 +1,10 @@
+<root>
+  Elements can have attributes:
+  <element attributeName="attributeValue" />
+
+  <a
+    b="charlie"
+    d="echo"
+    f="golf"
+  />
+</root>

@@ -1,0 +1,384 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "type": "instruction",
+      "name": "xml",
+      "value": "version=\"1.0\" encoding=\"utf-8\"",
+      "position": {
+        "start": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 39,
+          "offset": 38
+        }
+      }
+    },
+    {
+      "type": "text",
+      "value": "\n",
+      "position": {
+        "start": {
+          "line": 1,
+          "column": 39,
+          "offset": 38
+        },
+        "end": {
+          "line": 2,
+          "column": 1,
+          "offset": 39
+        }
+      }
+    },
+    {
+      "type": "comment",
+      "value": "Charlie",
+      "position": {
+        "start": {
+          "line": 2,
+          "column": 1,
+          "offset": 39
+        },
+        "end": {
+          "line": 2,
+          "column": 15,
+          "offset": 53
+        }
+      }
+    },
+    {
+      "type": "text",
+      "value": "\n",
+      "position": {
+        "start": {
+          "line": 2,
+          "column": 15,
+          "offset": 53
+        },
+        "end": {
+          "line": 3,
+          "column": 1,
+          "offset": 54
+        }
+      }
+    },
+    {
+      "type": "cdata",
+      "value": "<greeting>Hello, world!</greeting>",
+      "position": {
+        "start": {
+          "line": 3,
+          "column": 1,
+          "offset": 54
+        },
+        "end": {
+          "line": 3,
+          "column": 47,
+          "offset": 100
+        }
+      }
+    },
+    {
+      "type": "text",
+      "value": "\n",
+      "position": {
+        "start": {
+          "line": 3,
+          "column": 47,
+          "offset": 100
+        },
+        "end": {
+          "line": 4,
+          "column": 1,
+          "offset": 101
+        }
+      }
+    },
+    {
+      "type": "element",
+      "name": "ncx",
+      "attributes": {
+        "xmlns": "http://www.daisy.org/z3986/2005/ncx/",
+        "version": "2005-1"
+      },
+      "children": [
+        {
+          "type": "text",
+          "value": "\n  ",
+          "position": {
+            "start": {
+              "line": 4,
+              "column": 68,
+              "offset": 168
+            },
+            "end": {
+              "line": 5,
+              "column": 3,
+              "offset": 171
+            }
+          }
+        },
+        {
+          "type": "element",
+          "name": "head",
+          "attributes": {},
+          "children": [
+            {
+              "type": "text",
+              "value": "\n    ",
+              "position": {
+                "start": {
+                  "line": 5,
+                  "column": 9,
+                  "offset": 177
+                },
+                "end": {
+                  "line": 6,
+                  "column": 5,
+                  "offset": 182
+                }
+              }
+            },
+            {
+              "type": "element",
+              "name": "meta",
+              "attributes": {
+                "name": "dtb:uid",
+                "content": "urn:isbn:9781234567891"
+              },
+              "children": [],
+              "position": {
+                "start": {
+                  "line": 6,
+                  "column": 5,
+                  "offset": 182
+                },
+                "end": {
+                  "line": 6,
+                  "column": 60,
+                  "offset": 237
+                }
+              }
+            },
+            {
+              "type": "text",
+              "value": "\n  ",
+              "position": {
+                "start": {
+                  "line": 6,
+                  "column": 60,
+                  "offset": 237
+                },
+                "end": {
+                  "line": 7,
+                  "column": 3,
+                  "offset": 240
+                }
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 5,
+              "column": 3,
+              "offset": 171
+            },
+            "end": {
+              "line": 7,
+              "column": 10,
+              "offset": 247
+            }
+          }
+        },
+        {
+          "type": "text",
+          "value": "\n  ",
+          "position": {
+            "start": {
+              "line": 7,
+              "column": 10,
+              "offset": 247
+            },
+            "end": {
+              "line": 8,
+              "column": 3,
+              "offset": 250
+            }
+          }
+        },
+        {
+          "type": "element",
+          "name": "docTitle",
+          "attributes": {},
+          "children": [
+            {
+              "type": "element",
+              "name": "text",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "text",
+                  "value": "A Christmas Carol",
+                  "position": {
+                    "start": {
+                      "line": 8,
+                      "column": 19,
+                      "offset": 266
+                    },
+                    "end": {
+                      "line": 8,
+                      "column": 36,
+                      "offset": 283
+                    }
+                  }
+                }
+              ],
+              "position": {
+                "start": {
+                  "line": 8,
+                  "column": 13,
+                  "offset": 260
+                },
+                "end": {
+                  "line": 8,
+                  "column": 43,
+                  "offset": 290
+                }
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 8,
+              "column": 3,
+              "offset": 250
+            },
+            "end": {
+              "line": 8,
+              "column": 54,
+              "offset": 301
+            }
+          }
+        },
+        {
+          "type": "text",
+          "value": "\n  ",
+          "position": {
+            "start": {
+              "line": 8,
+              "column": 54,
+              "offset": 301
+            },
+            "end": {
+              "line": 9,
+              "column": 3,
+              "offset": 304
+            }
+          }
+        },
+        {
+          "type": "element",
+          "name": "docAuthor",
+          "attributes": {},
+          "children": [
+            {
+              "type": "element",
+              "name": "text",
+              "attributes": {},
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Charles Dickens",
+                  "position": {
+                    "start": {
+                      "line": 9,
+                      "column": 20,
+                      "offset": 321
+                    },
+                    "end": {
+                      "line": 9,
+                      "column": 35,
+                      "offset": 336
+                    }
+                  }
+                }
+              ],
+              "position": {
+                "start": {
+                  "line": 9,
+                  "column": 14,
+                  "offset": 315
+                },
+                "end": {
+                  "line": 9,
+                  "column": 42,
+                  "offset": 343
+                }
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 9,
+              "column": 3,
+              "offset": 304
+            },
+            "end": {
+              "line": 9,
+              "column": 54,
+              "offset": 355
+            }
+          }
+        },
+        {
+          "type": "text",
+          "value": "\n",
+          "position": {
+            "start": {
+              "line": 9,
+              "column": 54,
+              "offset": 355
+            },
+            "end": {
+              "line": 10,
+              "column": 1,
+              "offset": 356
+            }
+          }
+        }
+      ],
+      "position": {
+        "start": {
+          "line": 4,
+          "column": 1,
+          "offset": 101
+        },
+        "end": {
+          "line": 10,
+          "column": 7,
+          "offset": 362
+        }
+      }
+    },
+    {
+      "type": "text",
+      "value": "\n",
+      "position": {
+        "start": {
+          "line": 10,
+          "column": 7,
+          "offset": 362
+        },
+        "end": {
+          "line": 11,
+          "column": 1,
+          "offset": 363
+        }
+      }
+    }
+  ]
+}
