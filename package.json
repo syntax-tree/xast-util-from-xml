@@ -4,8 +4,9 @@
   "description": "xast utility to parse from XML",
   "license": "MIT",
   "keywords": [
-    "xast",
     "unist",
+    "xast",
+    "xast-util",
     "util",
     "utility",
     "xml",
