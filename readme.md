@@ -106,7 +106,11 @@ XML can be a dangerous language: don’t trust user-provided data.
 ## Related
 
 *   [`xast-util-to-xml`](https://github.com/syntax-tree/xast-util-to-xml)
-    — Serialize xast to XML
+    — serialize xast to XML
+*   [`hast-util-to-xast`](https://github.com/syntax-tree/hast-util-to-xast)
+    — transform hast (html, svg) to xast (xml)
+*   [`xastscript`](https://github.com/syntax-tree/xastscript)
+    — create xast trees
 
 ## Contribute
 
