@@ -9,28 +9,16 @@ var fromXml = require('..')
 
 var join = path.join
 
-test('xast-util-from-xml', function(t) {
+test('xast-util-from-xml', function (t) {
   t.equal(typeof fromXml, 'function', 'should expose a function')
 
   try {
     fromXml('<root unquoted=attribute>')
     t.fail('should fail (1)')
   } catch (error) {
-    t.deepEqual(
-      error,
-      {
-        message: 'Unquoted attribute value',
-        name: '1:17',
-        reason: 'Unquoted attribute value',
-        line: 1,
-        column: 17,
-        location: {
-          start: {line: 1, column: 17, offset: 16},
-          end: {line: null, column: null}
-        },
-        source: 'xast-util-from-xml',
-        ruleId: 'sax'
-      },
+    t.equal(
+      String(error),
+      '1:17: Unquoted attribute value',
       'should throw messages'
     )
   }
@@ -39,21 +27,9 @@ test('xast-util-from-xml', function(t) {
     fromXml('<!ENTITY>')
     t.fail('should fail (2)')
   } catch (error) {
-    t.deepEqual(
-      error,
-      {
-        message: 'Unexpected SGML declaration',
-        name: '1:10',
-        reason: 'Unexpected SGML declaration',
-        line: 1,
-        column: 10,
-        location: {
-          start: {line: 1, column: 10, offset: 9},
-          end: {line: null, column: null}
-        },
-        source: 'xast-util-from-xml',
-        ruleId: 'unexpected-sgml'
-      },
+    t.deepLooseEqual(
+      String(error),
+      '1:10: Unexpected SGML declaration',
       'should throw for SGML directives'
     )
   }
@@ -62,21 +38,9 @@ test('xast-util-from-xml', function(t) {
     fromXml('<root>&foo;</root>')
     t.fail('should fail (3)')
   } catch (error) {
-    t.deepEqual(
-      error,
-      {
-        message: 'Invalid character entity',
-        name: '1:12',
-        reason: 'Invalid character entity',
-        line: 1,
-        column: 12,
-        location: {
-          start: {line: 1, column: 12, offset: 11},
-          end: {line: null, column: null}
-        },
-        source: 'xast-util-from-xml',
-        ruleId: 'sax'
-      },
+    t.deepLooseEqual(
+      String(error),
+      '1:12: Invalid character entity',
       'should throw for unknown entities (1)'
     )
   }
@@ -85,21 +49,9 @@ test('xast-util-from-xml', function(t) {
     fromXml('<root>&copy;</root>')
     t.fail('should fail (4)')
   } catch (error) {
-    t.deepEqual(
-      error,
-      {
-        message: 'Invalid character entity',
-        name: '1:13',
-        reason: 'Invalid character entity',
-        line: 1,
-        column: 13,
-        location: {
-          start: {line: 1, column: 13, offset: 12},
-          end: {line: null, column: null}
-        },
-        source: 'xast-util-from-xml',
-        ruleId: 'sax'
-      },
+    t.deepLooseEqual(
+      String(error),
+      '1:13: Invalid character entity',
       'should throw for unknown entities (2)'
     )
   }
@@ -108,27 +60,15 @@ test('xast-util-from-xml', function(t) {
     fromXml('<root><a><b><c/></a></b></root>')
     t.fail('should fail (5)')
   } catch (error) {
-    t.deepEqual(
-      error,
-      {
-        message: 'Unexpected close tag',
-        name: '1:21',
-        reason: 'Unexpected close tag',
-        line: 1,
-        column: 21,
-        location: {
-          start: {line: 1, column: 21, offset: 20},
-          end: {line: null, column: null}
-        },
-        source: 'xast-util-from-xml',
-        ruleId: 'sax'
-      },
+    t.deepLooseEqual(
+      String(error),
+      '1:21: Unexpected close tag',
       'should throw on invalid nesting'
     )
   }
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!doctype>')
     },
     /1:11: Expected doctype name/,
@@ -136,7 +76,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!doctype !>')
     },
     /1:13: Expected start of doctype name/,
@@ -144,7 +84,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name[<!ELEMENT greeting (#PCDATA)>]>')
     },
     /1:47: Unexpected internal subset/,
@@ -152,7 +92,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name [<!ELEMENT greeting (#PCDATA)>]>')
     },
     /1:48: Unexpected internal subset/,
@@ -160,7 +100,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name!>')
     },
     /1:17: Expected doctype name character, whitespace, or doctype end/,
@@ -168,7 +108,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name !>')
     },
     /1:18: Expected external identifier \(`PUBLIC` or `SYSTEM`\), whitespace, or doctype end/,
@@ -176,7 +116,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name PUB>')
     },
     /1:20: Expected external identifier \(`PUBLIC` or `SYSTEM`\)/,
@@ -184,7 +124,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name SYSTEm>')
     },
     /1:23: Expected external identifier \(`PUBLIC` or `SYSTEM`\)/,
@@ -192,7 +132,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name PUBLIC>')
     },
     /1:23: Expected whitespace after `PUBLIC`/,
@@ -200,7 +140,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name PUBLIC !>')
     },
     /1:25: Expected quote or apostrophe to start public literal/,
@@ -208,7 +148,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name PUBLIC "🤔">')
     },
     /1:28: Expected pubid character in public literal/,
@@ -216,7 +156,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name PUBLIC "literal"!>')
     },
     /1:34: Expected whitespace after public literal/,
@@ -224,7 +164,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name SYSTEM>')
     },
     /1:23: Expected whitespace after `SYSTEM`/,
@@ -232,7 +172,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name SYSTEM !>')
     },
     /1:25: Expected quote or apostrophe to start system literal/,
@@ -240,7 +180,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name SYSTEM "asd>')
     },
     /1:28: Unexpected end/,
@@ -248,7 +188,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name SYSTEM "asd" [<!ELEMENT greeting (#PCDATA)>]>')
     },
     /1:61: Unexpected internal subset/,
@@ -256,7 +196,7 @@ test('xast-util-from-xml', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       fromXml('<!DOCTYPE name SYSTEM "asd" !>')
     },
     /1:31: Expected whitespace or end of doctype/,
@@ -266,12 +206,10 @@ test('xast-util-from-xml', function(t) {
   t.end()
 })
 
-test('fixtures', function(t) {
+test('fixtures', function (t) {
   var base = join('test', 'fixtures')
 
-  fs.readdirSync(base)
-    .filter(negate(hidden))
-    .forEach(each)
+  fs.readdirSync(base).filter(negate(hidden)).forEach(each)
 
   t.end()
 
