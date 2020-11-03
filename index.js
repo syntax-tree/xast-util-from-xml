@@ -5,57 +5,13 @@ var Message = require('vfile-message')
 
 module.exports = fromXml
 
-var origin = 'xast-util-from-xml'
+var fromCharCode = String.fromCharCode
 
-// Character codes:
-var eof = null
-var tab = 9 // '\t'
-var lineFeed = 10 // '\n'
-var carriageReturn = 13 // '\r'
-var space = 32 // ' '
-var exclamationMark = 33 // '!'
-var quotationMark = 34 // '"'
-var numberSign = 35 // '#'
-var dollarSign = 36 // '$'
-var percentSign = 37 // '%'
-var apostrophe = 39 // '''
-var leftParenthesis = 40 // '('
-var rightParenthesis = 41 // ')'
-var asterisk = 42 // '*'
-var plusSign = 43 // '+'
-var comma = 44 // ','
-var dash = 45 // '-'
-var dot = 46 // '.'
-var slash = 47 // '/'
-var digit0 = 48 // '0'
-var digit9 = 57 // '9'
-var colon = 58 // ':'
-var semicolon = 59 // ';'
-var equalsTo = 61 // '='
-var questionMark = 63 // '?'
-var atSign = 64 // '@'
-var uppercaseA = 65 // 'A'
-var uppercaseB = 66 // 'B'
-var uppercaseC = 67 // 'C'
-var uppercaseE = 69 // 'E'
-var uppercaseI = 73 // 'I'
-var uppercaseL = 76 // 'L'
-var uppercaseM = 77 // 'M'
-var uppercaseP = 80 // 'P'
-var uppercaseS = 83 // 'S'
-var uppercaseT = 84 // 'T'
-var uppercaseU = 85 // 'U'
-var uppercaseY = 89 // 'Y'
-var uppercaseZ = 90 // 'Z'
-var leftSquareBracket = 91 // '['
-var underscore = 95 // '_'
-var lowercaseA = 97 // 'a'
-var lowercaseZ = 122 // 'z'
+var search = /\r?\n|\r/g
 
 function fromXml(doc) {
   var parser = new Parser(true, {position: true, strictEntities: true})
-  var node = {type: 'root', children: []}
-  var stack = [node]
+  var stack = [{type: 'root', children: []}]
   var position = now()
 
   parser.ondoctype = ondoctype
@@ -65,23 +21,21 @@ function fromXml(doc) {
   parser.oncomment = oncomment
   parser.onopencdata = oncdataopen
   parser.oncdata = oncdatavalue
-  parser.onclosecdata = oncdataclose
+  parser.onclosecdata = exit
   parser.onopentag = onopen
-  parser.onclosetag = onclose
+  parser.onclosetag = exit
   parser.onerror = onerror
 
   parser.write(doc).close()
 
-  return node
+  return stack[0]
 
   function onerror(err) {
-    var reason = err.message
-    var lineIndex = reason.indexOf('\nLine')
+    var index = err.message.indexOf('\nLine')
     /* istanbul ignore next
      * - The substring should always be included, but this guards against
      * changes in newer sax versions */
-    reason = lineIndex === -1 ? reason : reason.slice(0, lineIndex)
-    fail(reason, 'sax')
+    fail(index === -1 ? err.message : err.message.slice(0, index), 'sax')
   }
 
   function onsgmldeclaration() {
@@ -89,23 +43,18 @@ function fromXml(doc) {
   }
 
   function ondoctype(value) {
+    var node = {type: 'doctype', name: '', public: null, system: null}
     var index = -1
-    var length = value.length + 1
     var state = 'BEGIN'
-    var nameStart
-    var nameEnd
-    var pubStart
-    var pubEnd
-    var sysStart
-    var sysEnd
-    var nextState
-    var expect
-    var expected
+    var returnState
+    var buffer
+    var bufferIndex
+    var start
+    var marker
     var code
-    var offset
 
-    while (++index < length) {
-      code = index === value.length ? eof : value.charCodeAt(index)
+    while (++index <= value.length) {
+      code = index === value.length ? null /* EOF */ : value.charCodeAt(index)
 
       switch (state) {
         case 'BEGIN':
@@ -120,8 +69,8 @@ function fromXml(doc) {
           if (isSpace(code)) {
             // As expected.
           } else if (isNameStartChar(code)) {
-            nameStart = index
             state = 'IN_NAME'
+            start = index
           } else {
             fail('Expected start of doctype name', 'doctype-name')
           }
@@ -130,12 +79,10 @@ function fromXml(doc) {
         case 'IN_NAME':
           if (isNameChar(code)) {
             // As expected.
-          } else if (isSpace(code)) {
-            nameEnd = index
+          } else if (isSpace(code) || code === null /* EOF */) {
             state = 'AFTER_NAME'
-          } else if (code === eof) {
-            nameEnd = index
-          } else if (code === leftSquareBracket) {
+            node.name = value.slice(start, index)
+          } else if (code === 91 /* `[` */) {
             fail('Unexpected internal subset', 'doctype-internal-subset')
           } else {
             fail(
@@ -146,35 +93,21 @@ function fromXml(doc) {
 
           break
         case 'AFTER_NAME':
-          if (code === eof) {
+          if (code === null /* EOF */) {
             // Done.
           } else if (isSpace(code)) {
             // As expected.
-          } else if (code === uppercaseP) {
-            expect = [
-              uppercaseP,
-              uppercaseU,
-              uppercaseB,
-              uppercaseL,
-              uppercaseI,
-              uppercaseC
-            ]
+          } else if (code === 80 /* `P` */) {
             state = 'IN_EID'
-            offset = 0
-            nextState = 'AFTER_PUBLIC'
-          } else if (code === uppercaseS) {
-            expect = [
-              uppercaseS,
-              uppercaseY,
-              uppercaseS,
-              uppercaseT,
-              uppercaseE,
-              uppercaseM
-            ]
+            returnState = 'AFTER_PUBLIC'
+            buffer = 'PUBLIC'
+            bufferIndex = 0
+          } else if (code === 83 /* `S` */) {
             state = 'IN_EID'
-            offset = 0
-            nextState = 'AFTER_SYSTEM'
-          } else if (code === leftSquareBracket) {
+            returnState = 'AFTER_SYSTEM'
+            buffer = 'SYSTEM'
+            bufferIndex = 0
+          } else if (code === 91 /* `[` */) {
             fail('Unexpected internal subset', 'doctype-internal-subset')
           } else {
             fail(
@@ -185,11 +118,9 @@ function fromXml(doc) {
 
           break
         case 'IN_EID':
-          expected = expect[++offset]
-
-          if (code === expected) {
-            if (offset === expect.length - 1) {
-              state = nextState
+          if (code === buffer.charCodeAt(++bufferIndex)) {
+            if (bufferIndex === buffer.length - 1) {
+              state = returnState
             }
           } else {
             fail(
@@ -218,10 +149,10 @@ function fromXml(doc) {
         case 'BEFORE_PUBLIC_LITERAL':
           if (isSpace(code)) {
             // As expected.
-          } else if (code === quotationMark || code === apostrophe) {
+          } else if (code === 34 /* `"` */ || code === 39 /* `'` */) {
             state = 'IN_PUBLIC_LITERAL'
-            expected = code
-            pubStart = index + 1
+            start = index + 1
+            marker = code
           } else {
             fail(
               'Expected quote or apostrophe to start public literal',
@@ -231,9 +162,9 @@ function fromXml(doc) {
 
           break
         case 'IN_PUBLIC_LITERAL':
-          if (code === expected) {
-            pubEnd = index
+          if (code === marker) {
             state = 'AFTER_PUBLIC_LITERAL'
+            node.public = value.slice(start, index)
           } else if (isPubidChar(code)) {
             // As expected.
           } else {
@@ -259,10 +190,10 @@ function fromXml(doc) {
         case 'BEFORE_SYSTEM_LITERAL':
           if (isSpace(code)) {
             // As expected.
-          } else if (code === quotationMark || code === apostrophe) {
+          } else if (code === 34 /* `"` */ || code === 39 /* `'` */) {
             state = 'IN_SYSTEM_LITERAL'
-            expected = code
-            sysStart = index + 1
+            start = index + 1
+            marker = code
           } else {
             fail(
               'Expected quote or apostrophe to start system literal',
@@ -274,15 +205,15 @@ function fromXml(doc) {
         case 'IN_SYSTEM_LITERAL':
           /* istanbul ignore next
            * - Handled by SAX, but keep it to guard against changes in newer sax
-           versions */
-          if (code === eof) {
+           * versions. */
+          if (code === null /* EOF */) {
             fail(
               'Expected quote or apostrophe to end system literal',
               'doctype-system-literal'
             )
-          } else if (code === expected) {
-            sysEnd = index
+          } else if (code === marker) {
             state = 'AFTER_SYSTEM_LITERAL'
+            node.system = value.slice(start, index)
           } else {
             // As expected.
           }
@@ -290,11 +221,11 @@ function fromXml(doc) {
           break
 
         case 'AFTER_SYSTEM_LITERAL':
-          if (code === eof) {
+          if (code === null /* EOF */) {
             // Done.
           } else if (isSpace(code)) {
             // As expected.
-          } else if (code === leftSquareBracket) {
+          } else if (code === 91 /* `[` */) {
             fail('Unexpected internal subset', 'internal-subset')
           } else {
             fail('Expected whitespace or end of doctype', 'system-literal')
@@ -307,24 +238,21 @@ function fromXml(doc) {
       }
     }
 
-    enterExit({
-      type: 'doctype',
-      name: value.slice(nameStart, nameEnd),
-      public: pubStart === undefined ? null : value.slice(pubStart, pubEnd),
-      system: sysStart === undefined ? null : value.slice(sysStart, sysEnd)
-    })
+    enter(node)
+    exit()
   }
 
   function onprocessinginstruction(value) {
-    enterExit({
+    enter({
       type: 'instruction',
       name: String(value.name),
       value: String(value.body)
     })
+    exit()
   }
 
   function oncomment(value) {
-    var child = {type: 'comment', value: value}
+    var node = {type: 'comment', value: value}
 
     // Comment has a positional bug… 😢
     // They end right before the last character (`>`), so let’s add that:
@@ -332,9 +260,10 @@ function fromXml(doc) {
     actualEnd.column++
     actualEnd.offset++
 
-    enterExit(child)
+    enter(node)
+    exit()
 
-    child.position.end = Object.assign({}, actualEnd)
+    node.position.end = Object.assign({}, actualEnd)
     position = actualEnd
   }
 
@@ -343,36 +272,38 @@ function fromXml(doc) {
   }
 
   function oncdatavalue(value) {
-    node.value += value
-  }
-
-  function oncdataclose() {
-    exit()
+    stack[stack.length - 1].value += value
   }
 
   function ontext(value) {
-    var child = {type: 'text', value: value}
-
+    var node = {type: 'text', value: value}
     // Text has a positional bug… 😢
     // When they are added, the position is already at the next token.
     // So let’s reverse that.
     var actualEnd = Object.assign({}, position)
-    var index = -1
-    var length = value.length
+    var start = 0
+    var match
 
-    while (++index < length) {
-      if (value.charCodeAt(index) === lineFeed) {
+    while (start < value.length) {
+      search.lastIndex = start
+      match = search.exec(value)
+
+      if (match) {
         actualEnd.line++
         actualEnd.column = 1
+        start = match.index + match[0].length
       } else {
-        actualEnd.column++
+        actualEnd.column += value.length - start
+        start = value.length
       }
-
-      actualEnd.offset++
     }
 
-    enterExit(child)
-    child.position.end = Object.assign({}, actualEnd)
+    actualEnd.offset += value.length
+
+    enter(node)
+    exit()
+
+    node.position.end = Object.assign({}, actualEnd)
     position = actualEnd
   }
 
@@ -385,40 +316,16 @@ function fromXml(doc) {
     })
   }
 
-  function onclose(/* name */) {
-    exit()
-  }
-
-  function enter(child) {
-    var end = now()
-
-    child.position = {start: Object.assign({}, position)}
-
-    node.children.push(child)
-    stack.push(child)
-    node = child
-    position = end
+  function enter(node) {
+    node.position = {start: Object.assign({}, position)}
+    stack[stack.length - 1].children.push(node)
+    stack.push(node)
+    position = now()
   }
 
   function exit() {
-    var end = now()
-
-    node.position.end = Object.assign({}, end)
-    stack.pop()
-    node = stack[stack.length - 1]
-    position = end
-  }
-
-  function enterExit(child) {
-    var end = now()
-
-    child.position = {
-      start: Object.assign({}, position),
-      end: Object.assign({}, end)
-    }
-
-    node.children.push(child)
-    position = end
+    position = now()
+    stack.pop().position.end = Object.assign({}, position)
   }
 
   function now() {
@@ -430,82 +337,29 @@ function fromXml(doc) {
   }
 
   function fail(reason, id) {
-    throw new Message(reason, now(), origin + ':' + id)
+    throw new Message(reason, now(), 'xast-util-from-xml:' + id)
   }
 }
 
 // See: <https://www.w3.org/TR/xml/#NT-NameStartChar>
 function isNameStartChar(code) {
-  /* istanbul ignore next - superfluous to cover every branch */
-  return (
-    code === colon ||
-    code === underscore ||
-    (code >= uppercaseA && code <= uppercaseZ) ||
-    (code >= lowercaseA && code <= lowercaseZ) ||
-    (code >= 0xc0 && code <= 0xd6) ||
-    (code >= 0xd8 && code <= 0xf6) ||
-    (code >= 0xf8 && code <= 0x2ff) ||
-    (code >= 0x370 && code <= 0x37d) ||
-    (code >= 0x37f && code <= 0x1fff) ||
-    (code >= 0x200c && code <= 0x200d) ||
-    (code >= 0x2070 && code <= 0x218f) ||
-    (code >= 0x2c00 && code <= 0x2fef) ||
-    (code >= 0x3001 && code <= 0xd7ff) ||
-    (code >= 0xf900 && code <= 0xfdcf) ||
-    (code >= 0xfdf0 && code <= 0xfffd) ||
-    (code >= 0x10000 && code <= 0xeffff)
+  return /[:A-Z_a-z\xc0-\xd6\xd8-\xf6\xf8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]/.test(
+    fromCharCode(code)
   )
 }
 
 // See: <https://www.w3.org/TR/xml/#NT-NameChar>
 function isNameChar(code) {
-  /* istanbul ignore next - superfluous to cover every branch */
   return (
     isNameStartChar(code) ||
-    code === dash ||
-    code === dot ||
-    code === 0xb7 ||
-    (code >= digit0 && code <= digit9) ||
-    (code >= 0x300 && code <= 0x36f) ||
-    (code >= 0x203f && code <= 0x2040)
+    /[-.\d\xb7\u0300-\u036f\u203f\u2040]/.test(fromCharCode(code))
   )
 }
 
 function isSpace(code) {
-  return (
-    code === tab ||
-    code === lineFeed ||
-    code === carriageReturn ||
-    code === space
-  )
+  return /[\t\n\r ]/.test(fromCharCode(code))
 }
 
 function isPubidChar(code) {
-  return (
-    code === lineFeed ||
-    code === carriageReturn ||
-    code === space ||
-    code === exclamationMark ||
-    code === numberSign ||
-    code === dollarSign ||
-    code === percentSign ||
-    code === apostrophe ||
-    code === leftParenthesis ||
-    code === rightParenthesis ||
-    code === asterisk ||
-    code === plusSign ||
-    code === comma ||
-    code === dash ||
-    code === dot ||
-    code === slash ||
-    code === colon ||
-    code === semicolon ||
-    code === equalsTo ||
-    code === questionMark ||
-    code === atSign ||
-    code === underscore ||
-    (code >= uppercaseA && code <= uppercaseZ) ||
-    (code >= lowercaseA && code <= lowercaseZ) ||
-    (code >= digit0 && code <= digit9)
-  )
+  return /[\n\r !#$%'-;=?-Z_a-z]/.test(fromCharCode(code))
 }

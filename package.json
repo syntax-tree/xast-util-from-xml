@@ -69,9 +69,12 @@
     "prettier": true,
     "esnext": false,
     "rules": {
+      "complexity": "off",
+      "no-misleading-character-class": "off",
+      "unicorn/escape-case": "off",
+      "unicorn/no-hex-escape": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
-      "unicorn/prefer-optional-catch-binding": "off",
-      "complexity": "off"
+      "unicorn/prefer-optional-catch-binding": "off"
     }
   },
   "remarkConfig": {
