@@ -30,12 +30,12 @@ function fromXml(doc) {
 
   return stack[0]
 
-  function onerror(err) {
-    var index = err.message.indexOf('\nLine')
+  function onerror(error) {
+    var index = error.message.indexOf('\nLine')
     /* istanbul ignore next
      * - The substring should always be included, but this guards against
      * changes in newer sax versions */
-    fail(index === -1 ? err.message : err.message.slice(0, index), 'sax')
+    fail(index === -1 ? error.message : error.message.slice(0, index), 'sax')
   }
 
   function onsgmldeclaration() {
