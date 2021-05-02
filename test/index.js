@@ -1,3 +1,9 @@
+/**
+ * @typedef {import('../lib/index.js').Node} Node
+ *
+ *
+ */
+
 import fs from 'fs'
 import path from 'path'
 import test from 'tape'
@@ -216,17 +222,18 @@ test('fixtures', function (t) {
 
   t.end()
 
-  function each(fixture) {
-    var input = String(fs.readFileSync(join(base, fixture, 'index.xml')))
+  function each(/** @type {string} */ fixture) {
+    var input = fs.readFileSync(join(base, fixture, 'index.xml'))
     var fp = join(base, fixture, 'index.json')
     var actual = fromXml(input)
+    /** @type {Node} */
     var expected
 
     try {
-      expected = JSON.parse(fs.readFileSync(fp))
+      expected = JSON.parse(String(fs.readFileSync(fp)))
     } catch {
       // New fixture.
-      fs.writeFileSync(fp, JSON.stringify(actual, 0, 2) + '\n')
+      fs.writeFileSync(fp, JSON.stringify(actual, null, 2) + '\n')
       return
     }
 
