@@ -1,11 +1,8 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var test = require('tape')
-var negate = require('negate')
-var hidden = require('is-hidden')
-var fromXml = require('..')
+import fs from 'fs'
+import path from 'path'
+import test from 'tape'
+import {isHidden} from 'is-hidden'
+import {fromXml} from '../index.js'
 
 var join = path.join
 
@@ -208,11 +205,13 @@ test('xast-util-from-xml', function (t) {
 
 test('fixtures', function (t) {
   var base = join('test', 'fixtures')
-  var files = fs.readdirSync(base).filter(negate(hidden))
+  var files = fs.readdirSync(base)
   var index = -1
 
   while (++index < files.length) {
-    each(files[index])
+    if (!isHidden(files[index])) {
+      each(files[index])
+    }
   }
 
   t.end()
@@ -225,7 +224,7 @@ test('fixtures', function (t) {
 
     try {
       expected = JSON.parse(fs.readFileSync(fp))
-    } catch (_) {
+    } catch {
       // New fixture.
       fs.writeFileSync(fp, JSON.stringify(actual, 0, 2) + '\n')
       return

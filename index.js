@@ -1,15 +1,13 @@
-'use strict'
+import sax from 'sax'
+import Message from 'vfile-message'
 
-var Parser = require('sax').SAXParser
-var Message = require('vfile-message')
-
-module.exports = fromXml
+var Parser = sax.SAXParser
 
 var fromCharCode = String.fromCharCode
 
 var search = /\r?\n|\r/g
 
-function fromXml(doc) {
+export function fromXml(doc) {
   var parser = new Parser(true, {position: true, strictEntities: true})
   var stack = [{type: 'root', children: []}]
   var position = now()
@@ -32,9 +30,9 @@ function fromXml(doc) {
 
   function onerror(error) {
     var index = error.message.indexOf('\nLine')
-    /* istanbul ignore next
-     * - The substring should always be included, but this guards against
-     * changes in newer sax versions */
+    // The substring should always be included, but this guards against
+    // changes in newer sax versions.
+    /* c8 ignore next */
     fail(index === -1 ? error.message : error.message.slice(0, index), 'sax')
   }
 
@@ -42,6 +40,7 @@ function fromXml(doc) {
     fail('Unexpected SGML declaration', 'unexpected-sgml')
   }
 
+  // eslint-disable-next-line complexity
   function ondoctype(value) {
     var node = {type: 'doctype', name: '', public: null, system: null}
     var index = -1
@@ -97,24 +96,39 @@ function fromXml(doc) {
             // Done.
           } else if (isSpace(code)) {
             // As expected.
-          } else if (code === 80 /* `P` */) {
-            state = 'IN_EID'
-            returnState = 'AFTER_PUBLIC'
-            buffer = 'PUBLIC'
-            bufferIndex = 0
-          } else if (code === 83 /* `S` */) {
-            state = 'IN_EID'
-            returnState = 'AFTER_SYSTEM'
-            buffer = 'SYSTEM'
-            bufferIndex = 0
-          } else if (code === 91 /* `[` */) {
-            fail('Unexpected internal subset', 'doctype-internal-subset')
-          } else {
-            fail(
-              'Expected external identifier (`PUBLIC` or `SYSTEM`), whitespace, or doctype end',
-              'doctype-external-identifier'
-            )
-          }
+          } else
+            switch (code) {
+              case 80: {
+                state = 'IN_EID'
+                returnState = 'AFTER_PUBLIC'
+                buffer = 'PUBLIC'
+                bufferIndex = 0
+
+                break
+              }
+
+              case 83: {
+                state = 'IN_EID'
+                returnState = 'AFTER_SYSTEM'
+                buffer = 'SYSTEM'
+                bufferIndex = 0
+
+                break
+              }
+
+              case 91: {
+                fail('Unexpected internal subset', 'doctype-internal-subset')
+
+                break
+              }
+
+              default: {
+                fail(
+                  'Expected external identifier (`PUBLIC` or `SYSTEM`), whitespace, or doctype end',
+                  'doctype-external-identifier'
+                )
+              }
+            }
 
           break
         case 'IN_EID':
@@ -203,9 +217,9 @@ function fromXml(doc) {
 
           break
         case 'IN_SYSTEM_LITERAL':
-          /* istanbul ignore next
-           * - Handled by SAX, but keep it to guard against changes in newer sax
-           * versions. */
+          // Handled by SAX, but keep it to guard against changes in newer sax
+          // versions.
+          /* c8 ignore next 5 */
           if (code === null /* EOF */) {
             fail(
               'Expected quote or apostrophe to end system literal',
@@ -232,7 +246,8 @@ function fromXml(doc) {
           }
 
           break
-        /* istanbul ignore next - Guard against new states */
+        // Guard against new states.
+        /* c8 ignore next 2 */
         default:
           throw new Error('Unhandled state `' + state + '`')
       }
@@ -252,7 +267,7 @@ function fromXml(doc) {
   }
 
   function oncomment(value) {
-    var node = {type: 'comment', value: value}
+    var node = {type: 'comment', value}
 
     // Comment has a positional bug… 😢
     // They end right before the last character (`>`), so let’s add that:
@@ -276,7 +291,7 @@ function fromXml(doc) {
   }
 
   function ontext(value) {
-    var node = {type: 'text', value: value}
+    var node = {type: 'text', value}
     // Text has a positional bug… 😢
     // When they are added, the position is already at the next token.
     // So let’s reverse that.
@@ -343,7 +358,7 @@ function fromXml(doc) {
 
 // See: <https://www.w3.org/TR/xml/#NT-NameStartChar>
 function isNameStartChar(code) {
-  return /[:A-Z_a-z\xc0-\xd6\xd8-\xf6\xf8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]/.test(
+  return /[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/.test(
     fromCharCode(code)
   )
 }
@@ -352,7 +367,7 @@ function isNameStartChar(code) {
 function isNameChar(code) {
   return (
     isNameStartChar(code) ||
-    /[-.\d\xb7\u0300-\u036f\u203f\u2040]/.test(fromCharCode(code))
+    /[-.\d\u00B7\u0300-\u036F\u203F\u2040]/.test(fromCharCode(code))
   )
 }
 

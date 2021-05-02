@@ -12,6 +12,9 @@
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -33,8 +36,8 @@ Say we have the following XML file, `example.xml`:
 And our script, `example.js`, looks as follows:
 
 ```js
-var fs = require('fs')
-var fromXml = require('xast-util-from-xml')
+import fs from 'fs'
+import {fromXml} from 'xast-util-from-xml'
 
 var doc = fs.readFileSync('example.xml')
 
@@ -84,6 +87,9 @@ Now, running `node example` yields (positional info removed for brevity):
 ```
 
 ## API
+
+This package exports the following identifiers: `fromXml`.
+There is no default export.
 
 ### `fromXml(doc)`
 
