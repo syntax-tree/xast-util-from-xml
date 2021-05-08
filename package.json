@@ -41,7 +41,7 @@
     "@types/unist": "^2.0.0",
     "@types/xast": "^1.0.0",
     "sax": "^1.0.0",
-    "vfile-message": "^2.0.0"
+    "vfile-message": "^3.0.0"
   },
   "devDependencies": {
     "@types/tape": "^4.0.0",
