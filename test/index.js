@@ -4,8 +4,8 @@
  *
  */
 
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import test from 'tape'
 import {isHidden} from 'is-hidden'
 import {fromXml} from '../index.js'
