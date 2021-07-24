@@ -76,9 +76,7 @@
   "xo": {
     "prettier": true,
     "rules": {
-      "no-misleading-character-class": "off",
-      "no-var": "off",
-      "prefer-arrow-callback": "off"
+      "#no-misleading-character-class": "off"
     }
   },
   "remarkConfig": {

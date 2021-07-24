@@ -36,12 +36,12 @@ Say we have the following XML file, `example.xml`:
 And our script, `example.js`, looks as follows:
 
 ```js
-import fs from 'fs'
+import fs from 'node:fs'
 import {fromXml} from 'xast-util-from-xml'
 
-var doc = fs.readFileSync('example.xml')
+const doc = fs.readFileSync('example.xml')
 
-var tree = fromXml(doc)
+const tree = fromXml(doc)
 
 console.log(tree)
 ```

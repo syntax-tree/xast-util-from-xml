@@ -10,9 +10,9 @@ import test from 'tape'
 import {isHidden} from 'is-hidden'
 import {fromXml} from '../index.js'
 
-var join = path.join
+const join = path.join
 
-test('xast-util-from-xml', function (t) {
+test('xast-util-from-xml', (t) => {
   t.equal(typeof fromXml, 'function', 'should expose a function')
 
   try {
@@ -71,7 +71,7 @@ test('xast-util-from-xml', function (t) {
   }
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!doctype>')
     },
     /1:11: Expected doctype name/,
@@ -79,7 +79,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!doctype !>')
     },
     /1:13: Expected start of doctype name/,
@@ -87,7 +87,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name[<!ELEMENT greeting (#PCDATA)>]>')
     },
     /1:47: Unexpected internal subset/,
@@ -95,7 +95,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name [<!ELEMENT greeting (#PCDATA)>]>')
     },
     /1:48: Unexpected internal subset/,
@@ -103,7 +103,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name!>')
     },
     /1:17: Expected doctype name character, whitespace, or doctype end/,
@@ -111,7 +111,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name !>')
     },
     /1:18: Expected external identifier \(`PUBLIC` or `SYSTEM`\), whitespace, or doctype end/,
@@ -119,7 +119,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name PUB>')
     },
     /1:20: Expected external identifier \(`PUBLIC` or `SYSTEM`\)/,
@@ -127,7 +127,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name SYSTEm>')
     },
     /1:23: Expected external identifier \(`PUBLIC` or `SYSTEM`\)/,
@@ -135,7 +135,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name PUBLIC>')
     },
     /1:23: Expected whitespace after `PUBLIC`/,
@@ -143,7 +143,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name PUBLIC !>')
     },
     /1:25: Expected quote or apostrophe to start public literal/,
@@ -151,7 +151,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name PUBLIC "🤔">')
     },
     /1:28: Expected pubid character in public literal/,
@@ -159,7 +159,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name PUBLIC "literal"!>')
     },
     /1:34: Expected whitespace after public literal/,
@@ -167,7 +167,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name SYSTEM>')
     },
     /1:23: Expected whitespace after `SYSTEM`/,
@@ -175,7 +175,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name SYSTEM !>')
     },
     /1:25: Expected quote or apostrophe to start system literal/,
@@ -183,7 +183,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name SYSTEM "asd>')
     },
     /1:28: Unexpected end/,
@@ -191,7 +191,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name SYSTEM "asd" [<!ELEMENT greeting (#PCDATA)>]>')
     },
     /1:61: Unexpected internal subset/,
@@ -199,7 +199,7 @@ test('xast-util-from-xml', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromXml('<!DOCTYPE name SYSTEM "asd" !>')
     },
     /1:31: Expected whitespace or end of doctype/,
@@ -209,10 +209,10 @@ test('xast-util-from-xml', function (t) {
   t.end()
 })
 
-test('fixtures', function (t) {
-  var base = join('test', 'fixtures')
-  var files = fs.readdirSync(base)
-  var index = -1
+test('fixtures', (t) => {
+  const base = join('test', 'fixtures')
+  const files = fs.readdirSync(base)
+  let index = -1
 
   while (++index < files.length) {
     if (!isHidden(files[index])) {
@@ -223,11 +223,11 @@ test('fixtures', function (t) {
   t.end()
 
   function each(/** @type {string} */ fixture) {
-    var input = fs.readFileSync(join(base, fixture, 'index.xml'))
-    var fp = join(base, fixture, 'index.json')
-    var actual = fromXml(input)
+    const input = fs.readFileSync(join(base, fixture, 'index.xml'))
+    const fp = join(base, fixture, 'index.json')
+    const actual = fromXml(input)
     /** @type {Node} */
-    var expected
+    let expected
 
     try {
       expected = JSON.parse(String(fs.readFileSync(fp)))
