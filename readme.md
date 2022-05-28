@@ -8,22 +8,65 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-**[xast][]** utility to parse from XML.
+[xast][] utility to parse from XML.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`fromXml(value)`](#fromxmlvalue)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a utility that takes XML input and turns it into a [xast][]
+syntax tree.
+It uses [`sax`][sax], which turns XML into events, while it turns those events
+into nodes.
+
+## When should I use this?
+
+If you want to handle syntax trees, use this.
+Use [`sax`][sax] itself instead when you want to do other things.
+
+The utility [`xast-util-to-xml`][xast-util-to-xml] does the inverse of this
+utility.
+It turns xast into XML.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
 
 ```sh
 npm install xast-util-from-xml
 ```
 
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {fromXml} from 'https://esm.sh/xast-util-from-xml@2'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {fromXml} from 'https://esm.sh/xast-util-from-xml@2?bundle'
+</script>
+```
+
 ## Use
 
-Say we have the following XML file, `example.xml`:
+Say our document `example.xml` contains:
 
 ```xml
 <album id="123">
@@ -33,20 +76,18 @@ Say we have the following XML file, `example.xml`:
 </album>
 ```
 
-And our script, `example.js`, looks as follows:
+…and our module `example.js` looks as follows:
 
 ```js
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import {fromXml} from 'xast-util-from-xml'
 
-const doc = fs.readFileSync('example.xml')
-
-const tree = fromXml(doc)
+const tree = fromXml(await fs.readFile('example.xml'))
 
 console.log(tree)
 ```
 
-Now, running `node example` yields (positional info removed for brevity):
+…now running `node example.js` yields (positional info removed for brevity):
 
 ```js
 {
@@ -88,22 +129,34 @@ Now, running `node example` yields (positional info removed for brevity):
 
 ## API
 
-This package exports the following identifiers: `fromXml`.
+This package exports the identifier `fromXml`.
 There is no default export.
 
-### `fromXml(doc)`
+### `fromXml(value)`
 
-Parse XML to a **[xast][]** tree.
+Turn XML into a syntax tree.
 
 ##### Parameters
 
-###### `doc`
+###### `value`
 
 Value to parse (`string` or `Buffer` in UTF-8).
 
 ##### Returns
 
 [`Root`][root].
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports no additional types.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
 
@@ -120,8 +173,8 @@ XML can be a dangerous language: don’t trust user-provided data.
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
@@ -162,16 +215,28 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://wooorm.com
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[support]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
 [xast]: https://github.com/syntax-tree/xast
 
 [root]: https://github.com/syntax-tree/xast#root
+
+[sax]: https://github.com/isaacs/sax-js
+
+[xast-util-to-xml]: https://github.com/syntax-tree/xast-util-to-xml
