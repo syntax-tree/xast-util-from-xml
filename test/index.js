@@ -8,9 +8,14 @@ import process from 'node:process'
 import test from 'node:test'
 import {isHidden} from 'is-hidden'
 import {fromXml} from '../index.js'
+import * as mod from '../index.js'
 
 test('fromXml', () => {
-  assert.equal(typeof fromXml, 'function', 'should expose a function')
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['fromXml'],
+    'should expose the public api'
+  )
 
   try {
     fromXml('<root unquoted=attribute>')
