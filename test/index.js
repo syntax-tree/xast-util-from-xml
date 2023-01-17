@@ -1,25 +1,22 @@
 /**
- * @typedef {import('../lib/index.js').Node} Node
- *
- *
+ * @typedef {import('xast').Root} Root
  */
 
-import fs from 'node:fs'
-import path from 'node:path'
-import test from 'tape'
+import assert from 'node:assert/strict'
+import fs from 'node:fs/promises'
+import process from 'node:process'
+import test from 'node:test'
 import {isHidden} from 'is-hidden'
 import {fromXml} from '../index.js'
 
-const join = path.join
-
-test('xast-util-from-xml', (t) => {
-  t.equal(typeof fromXml, 'function', 'should expose a function')
+test('fromXml', () => {
+  assert.equal(typeof fromXml, 'function', 'should expose a function')
 
   try {
     fromXml('<root unquoted=attribute>')
-    t.fail('should fail (1)')
+    assert.fail('should fail (1)')
   } catch (error) {
-    t.equal(
+    assert.equal(
       String(error),
       '1:17: Unquoted attribute value',
       'should throw messages'
@@ -28,9 +25,9 @@ test('xast-util-from-xml', (t) => {
 
   try {
     fromXml('<!ENTITY>')
-    t.fail('should fail (2)')
+    assert.fail('should fail (2)')
   } catch (error) {
-    t.deepLooseEqual(
+    assert.equal(
       String(error),
       '1:10: Unexpected SGML declaration',
       'should throw for SGML directives'
@@ -39,9 +36,9 @@ test('xast-util-from-xml', (t) => {
 
   try {
     fromXml('<root>&foo;</root>')
-    t.fail('should fail (3)')
+    assert.fail('should fail (3)')
   } catch (error) {
-    t.deepLooseEqual(
+    assert.equal(
       String(error),
       '1:12: Invalid character entity',
       'should throw for unknown entities (1)'
@@ -50,9 +47,9 @@ test('xast-util-from-xml', (t) => {
 
   try {
     fromXml('<root>&copy;</root>')
-    t.fail('should fail (4)')
+    assert.fail('should fail (4)')
   } catch (error) {
-    t.deepLooseEqual(
+    assert.equal(
       String(error),
       '1:13: Invalid character entity',
       'should throw for unknown entities (2)'
@@ -61,16 +58,16 @@ test('xast-util-from-xml', (t) => {
 
   try {
     fromXml('<root><a><b><c/></a></b></root>')
-    t.fail('should fail (5)')
+    assert.fail('should fail (5)')
   } catch (error) {
-    t.deepLooseEqual(
+    assert.equal(
       String(error),
       '1:21: Unexpected close tag',
       'should throw on invalid nesting'
     )
   }
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!doctype>')
     },
@@ -78,7 +75,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on missing doctype name'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!doctype !>')
     },
@@ -86,7 +83,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid doctype name'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name[<!ELEMENT greeting (#PCDATA)>]>')
     },
@@ -94,7 +91,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on internal subset directly after doctype name'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name [<!ELEMENT greeting (#PCDATA)>]>')
     },
@@ -102,7 +99,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on internal subset after doctype name'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name!>')
     },
@@ -110,7 +107,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid character directly after doctype'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name !>')
     },
@@ -118,7 +115,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid character after doctype'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name PUB>')
     },
@@ -126,7 +123,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid external identifier (1)'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name SYSTEm>')
     },
@@ -134,7 +131,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid external identifier (2)'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name PUBLIC>')
     },
@@ -142,7 +139,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on missing whitespace after public identifier'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name PUBLIC !>')
     },
@@ -150,7 +147,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid character after public identifier'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name PUBLIC "🤔">')
     },
@@ -158,7 +155,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid character in public identifier'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name PUBLIC "literal"!>')
     },
@@ -166,7 +163,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid character after public literal'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name SYSTEM>')
     },
@@ -174,7 +171,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on missing whitespace after system identifier'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name SYSTEM !>')
     },
@@ -182,7 +179,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on invalid character after system identifier'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name SYSTEM "asd>')
     },
@@ -190,7 +187,7 @@ test('xast-util-from-xml', (t) => {
     'should throw on unended system literal'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name SYSTEM "asd" [<!ELEMENT greeting (#PCDATA)>]>')
     },
@@ -198,45 +195,44 @@ test('xast-util-from-xml', (t) => {
     'should throw on internal subset after external id'
   )
 
-  t.throws(
+  assert.throws(
     () => {
       fromXml('<!DOCTYPE name SYSTEM "asd" !>')
     },
     /1:31: Expected whitespace or end of doctype/,
     'should throw on unexpected character after external id'
   )
-
-  t.end()
 })
 
-test('fixtures', (t) => {
-  const base = join('test', 'fixtures')
-  const files = fs.readdirSync(base)
+test('fixtures', async () => {
+  const base = new URL('fixtures/', import.meta.url)
+  const files = await fs.readdir(base)
   let index = -1
 
   while (++index < files.length) {
-    if (!isHidden(files[index])) {
-      each(files[index])
-    }
-  }
+    const folder = files[index]
 
-  t.end()
+    if (isHidden(folder)) continue
 
-  function each(/** @type {string} */ fixture) {
-    const input = fs.readFileSync(join(base, fixture, 'index.xml'))
-    const fp = join(base, fixture, 'index.json')
+    const inputUrl = new URL(folder + '/index.xml', base)
+    const treeUrl = new URL(folder + '/index.json', base)
+    const input = await fs.readFile(inputUrl)
     const actual = fromXml(input)
-    /** @type {Node} */
+    /** @type {Root} */
     let expected
 
     try {
-      expected = JSON.parse(String(fs.readFileSync(fp)))
+      expected = JSON.parse(String(await fs.readFile(treeUrl)))
+
+      if ('UPDATE' in process.env) {
+        throw new Error('Update')
+      }
     } catch {
-      // New fixture.
-      fs.writeFileSync(fp, JSON.stringify(actual, null, 2) + '\n')
-      return
+      // New folder.
+      await fs.writeFile(treeUrl, JSON.stringify(actual, null, 2) + '\n')
+      continue
     }
 
-    t.deepEqual(actual, expected, fixture)
+    assert.deepEqual(actual, expected, folder)
   }
 })
