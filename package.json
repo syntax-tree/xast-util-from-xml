@@ -1,6 +1,6 @@
 {
   "name": "xast-util-from-xml",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "xast utility to parse from XML",
   "license": "MIT",
   "keywords": [
