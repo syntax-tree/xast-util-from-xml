@@ -20,22 +20,6 @@
       }
     },
     {
-      "type": "text",
-      "value": "\n",
-      "position": {
-        "start": {
-          "line": 1,
-          "column": 16,
-          "offset": 15
-        },
-        "end": {
-          "line": 2,
-          "column": 1,
-          "offset": 16
-        }
-      }
-    },
-    {
       "type": "element",
       "name": "html",
       "attributes": {
@@ -95,8 +79,8 @@
                     },
                     "end": {
                       "line": 4,
-                      "column": 45,
-                      "offset": 113
+                      "column": 48,
+                      "offset": 116
                     }
                   }
                 }
@@ -439,22 +423,18 @@
           "offset": 428
         }
       }
-    },
-    {
-      "type": "text",
-      "value": "\n",
-      "position": {
-        "start": {
-          "line": 15,
-          "column": 8,
-          "offset": 428
-        },
-        "end": {
-          "line": 16,
-          "column": 1,
-          "offset": 429
-        }
-      }
     }
-  ]
+  ],
+  "position": {
+    "start": {
+      "line": 1,
+      "column": 1,
+      "offset": 0
+    },
+    "end": {
+      "line": 16,
+      "column": 1,
+      "offset": 429
+    }
+  }
 }

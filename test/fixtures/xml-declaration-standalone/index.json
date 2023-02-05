@@ -2,10 +2,9 @@
   "type": "root",
   "children": [
     {
-      "type": "doctype",
-      "name": "HTML",
-      "public": null,
-      "system": null,
+      "type": "instruction",
+      "name": "xml",
+      "value": "version=\"1.0\" standalone=\"yes\"",
       "position": {
         "start": {
           "line": 1,
@@ -14,8 +13,8 @@
         },
         "end": {
           "line": 1,
-          "column": 16,
-          "offset": 15
+          "column": 39,
+          "offset": 38
         }
       }
     },
@@ -26,14 +25,14 @@
       "children": [],
       "position": {
         "start": {
-          "line": 2,
-          "column": 1,
-          "offset": 16
+          "line": 1,
+          "column": 39,
+          "offset": 38
         },
         "end": {
-          "line": 2,
-          "column": 9,
-          "offset": 24
+          "line": 1,
+          "column": 47,
+          "offset": 46
         }
       }
     }
@@ -45,9 +44,9 @@
       "offset": 0
     },
     "end": {
-      "line": 3,
+      "line": 2,
       "column": 1,
-      "offset": 25
+      "offset": 47
     }
   }
 }

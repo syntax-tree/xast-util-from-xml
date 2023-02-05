@@ -20,20 +20,34 @@
       }
     },
     {
-      "type": "text",
-      "value": "\n",
+      "type": "element",
+      "name": "root",
+      "attributes": {},
+      "children": [],
       "position": {
         "start": {
-          "line": 1,
-          "column": 67,
-          "offset": 66
-        },
-        "end": {
           "line": 2,
           "column": 1,
           "offset": 67
+        },
+        "end": {
+          "line": 2,
+          "column": 9,
+          "offset": 75
         }
       }
     }
-  ]
+  ],
+  "position": {
+    "start": {
+      "line": 1,
+      "column": 1,
+      "offset": 0
+    },
+    "end": {
+      "line": 3,
+      "column": 1,
+      "offset": 76
+    }
+  }
 }

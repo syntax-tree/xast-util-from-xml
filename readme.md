@@ -27,15 +27,14 @@
 
 ## What is this?
 
-This package is a utility that takes XML input and turns it into a [xast][]
-syntax tree.
-It uses [`sax`][sax], which turns XML into events, while it turns those events
-into nodes.
+This package is a utility that takes serialized XML as input and turns it into
+a [xast][] syntax tree.
+It uses [`@rgrove/parse-xml`][parse-xml], which is a good and fast XML parser,
+and turns its results into xast.
 
 ## When should I use this?
 
-If you want to handle syntax trees, use this.
-Use [`sax`][sax] itself instead when you want to do other things.
+If you want to use xast syntax trees, use this.
 
 The utility [`xast-util-to-xml`][xast-util-to-xml] does the inverse of this
 utility.
@@ -84,7 +83,7 @@ import {fromXml} from 'xast-util-from-xml'
 
 const tree = fromXml(await fs.readFile('example.xml'))
 
-console.log(tree)
+console.dir(tree, {depth: null})
 ```
 
 …now running `node example.js` yields (positional info removed for brevity):
@@ -121,15 +120,14 @@ console.log(tree)
         },
         {type: 'text', value: '\n'}
       ]
-    },
-    {type: 'text', value: '\n'}
+    }
   ]
 }
 ```
 
 ## API
 
-This package exports the identifier [`fromXml`][fromxml].
+This package exports the identifier [`fromXml`][api-from-xml].
 There is no default export.
 
 ### `fromXml(value)`
@@ -236,8 +234,8 @@ abide by its terms.
 
 [root]: https://github.com/syntax-tree/xast#root
 
-[sax]: https://github.com/isaacs/sax-js
+[parse-xml]: https://github.com/rgrove/parse-xml
 
 [xast-util-to-xml]: https://github.com/syntax-tree/xast-util-to-xml
 
-[fromxml]: #fromxmlvalue
+[api-from-xml]: #fromxmlvalue
