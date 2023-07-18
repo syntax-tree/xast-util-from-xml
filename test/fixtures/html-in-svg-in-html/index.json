@@ -4,8 +4,6 @@
     {
       "type": "doctype",
       "name": "HTML",
-      "public": null,
-      "system": null,
       "position": {
         "start": {
           "line": 1,

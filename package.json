@@ -39,9 +39,9 @@
   ],
   "dependencies": {
     "@rgrove/parse-xml": "^4.1.0",
-    "@types/xast": "^1.0.0",
-    "vfile-location": "^4.0.0",
-    "vfile-message": "^3.0.0"
+    "@types/xast": "^2.0.0",
+    "vfile-location": "^5.0.0",
+    "vfile-message": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

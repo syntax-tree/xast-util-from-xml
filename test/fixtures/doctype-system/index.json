@@ -4,7 +4,6 @@
     {
       "type": "doctype",
       "name": "HTML",
-      "public": null,
       "system": "http://www.w3.org/TR/REC-html40/loose.dtd",
       "position": {
         "start": {

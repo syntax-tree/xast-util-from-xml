@@ -86,7 +86,9 @@ test('fixtures', async () => {
     const inputUrl = new URL(folder + '/index.xml', base)
     const treeUrl = new URL(folder + '/index.json', base)
     const input = await fs.readFile(inputUrl)
-    const actual = fromXml(input)
+    /** @type {Root} */
+    // Remove `undefined`s.
+    const actual = JSON.parse(JSON.stringify(fromXml(input)))
     /** @type {Root} */
     let expected
 
