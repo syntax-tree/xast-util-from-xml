@@ -83,7 +83,7 @@ import {fromXml} from 'xast-util-from-xml'
 
 const tree = fromXml(await fs.readFile('example.xml'))
 
-console.dir(tree, {depth: null})
+console.dir(tree, {depth: undefined})
 ```
 
 …now running `node example.js` yields (positional info removed for brevity):
