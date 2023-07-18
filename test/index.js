@@ -21,7 +21,7 @@ test('fromXml', async function (t) {
       fromXml('<root unquoted=attribute>')
       assert.fail()
     } catch (error) {
-      assert.match(String(error), /^1:16: Attribute value expected/)
+      assert.match(String(error), /^1:16: Could not parse XML/)
     }
   })
 
@@ -30,7 +30,7 @@ test('fromXml', async function (t) {
       fromXml('<!ENTITY>')
       assert.fail()
     } catch (error) {
-      assert.match(String(error), /^1:1: Root element is missing or invalid/)
+      assert.match(String(error), /^1:1: Could not parse XML/)
     }
   })
 
@@ -39,7 +39,7 @@ test('fromXml', async function (t) {
       fromXml('<root>&foo;</root>')
       assert.fail()
     } catch (error) {
-      assert.match(String(error), /^1:7: Named entity isn't defined/)
+      assert.match(String(error), /^1:7: Could not parse XML/)
     }
   })
 
@@ -48,7 +48,7 @@ test('fromXml', async function (t) {
       fromXml('<root>&copy;</root>')
       assert.fail()
     } catch (error) {
-      assert.match(String(error), /^1:7: Named entity isn't defined/)
+      assert.match(String(error), /^1:7: Could not parse XML/)
     }
   })
 
@@ -57,7 +57,7 @@ test('fromXml', async function (t) {
       fromXml('<root><a><b><c/></a></b></root>')
       assert.fail()
     } catch (error) {
-      assert.match(String(error), /^1:17: Missing end tag for element/)
+      assert.match(String(error), /^1:17: Could not parse XML/)
     }
   })
 })

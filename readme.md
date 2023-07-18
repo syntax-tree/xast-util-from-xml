@@ -136,12 +136,20 @@ Parse a string of XML to a xast tree.
 
 ##### Parameters
 
-*   `value` (`string` or `Buffer` in UTF-8).
+*   `value` (`Uint8Array` in UTF-8 or `string`).
     — serialized XML
 
 ##### Returns
 
 xast root ([`Root`][root]).
+
+###### Throws
+
+When the XML cannot be parsed with `@rgrove/parse-xml`, a
+[`VFileMessage`][vfile-message] is thrown.
+
+This can for example happen when passing archaic or unsafe XML (such as
+entities), or just otherwise invalid XML such as missnested tags.
 
 ## Types
 
@@ -233,6 +241,8 @@ abide by its terms.
 [xast]: https://github.com/syntax-tree/xast
 
 [root]: https://github.com/syntax-tree/xast#root
+
+[vfile-message]: https://github.com/vfile/vfile-message
 
 [parse-xml]: https://github.com/rgrove/parse-xml
 
